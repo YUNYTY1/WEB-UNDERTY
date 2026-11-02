@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+  body { @apply bg-ink font-body text-cream antialiased; }
+  :focus-visible { outline: 2px solid #b9a7f5; outline-offset: 3px; }
+}
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-[1440px] px-5 md:px-10 lg:px-[60px]; }
+  .display { @apply font-display font-semibold uppercase leading-[0.95] tracking-[-0.045em]; }
+  .label-mono { @apply font-mono text-[11px] uppercase tracking-[0.14em]; }
+  .section-title { @apply display text-[clamp(2.25rem,5.2vw,4.5rem)]; }
+  .section-pad { @apply py-20 md:py-28; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .animate-marquee, .animate-float, .animate-orbit, .animate-sweep, .animate-pop { animation: none !important; }
+}
