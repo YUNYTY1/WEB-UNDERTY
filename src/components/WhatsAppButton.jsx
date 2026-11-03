@@ -1,17 +1,16 @@
 import { MessageCircle } from 'lucide-react'
-import { whatsappLink } from '../lib/whatsapp'
+import { WHATSAPP_NUMBER } from '../data/site'
 
 export default function WhatsAppButton() {
   return (
     <a
-      href={whatsappLink()}
+      href={`https://wa.me/${+51969855902}`}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Hablemos por WhatsApp"
-      className="fixed bottom-4 right-4 z-30 flex h-14 items-center gap-3 rounded-full bg-mint px-4 text-ink shadow-lg shadow-black/40 transition-transform hover:scale-[1.03] sm:bottom-6 sm:right-6 sm:h-[68px] sm:px-6"
+      aria-label="Abrir WhatsApp"
+      className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#a3e635] text-ink shadow-[0_10px_25px_rgba(163,230,53,0.3)] transition-all duration-300 hover:scale-110 hover:bg-[#bef264]"
     >
-      <MessageCircle size={26} aria-hidden="true" />
-      <span className="hidden font-mono text-[11px] uppercase tracking-[0.12em] sm:inline">Hablemos por WhatsApp</span>
+      <MessageCircle size={26} className="fill-ink/10" />
     </a>
   )
 }

@@ -1,31 +1,72 @@
 import { ArrowUpRight, Check } from 'lucide-react'
-import Button from '../components/Button'
-import { whatsappLink } from '../lib/whatsapp'
-import { demo } from '../data/site'
+import SectionLabel from '../components/SectionLabel'
+import { WHATSAPP_NUMBER, demo } from '../data/site'
 
 export default function DemoCTA() {
+  const handleDemoClick = () => {
+    const text = encodeURIComponent(demo.message)
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, '_blank')
+  }
+
   return (
-    <section id="demo" className="py-10 md:py-16">
+    <section className="section-pad">
       <div className="container-x">
-        <div className="relative overflow-hidden rounded-3xl border border-line bg-gradient-to-br from-surface to-[#151715] p-7 sm:p-12 lg:p-[48px]">
-          <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full border-[36px] border-white/[0.03]" aria-hidden="true" />
-          <div className="relative grid gap-10 lg:grid-cols-2 lg:items-center">
-            <div>
-              <p className="label-mono text-[10px] text-lilac">{demo.label}</p>
-              <h2 className="mt-5 font-display text-[clamp(2.2rem,4.6vw,3.75rem)] font-medium uppercase leading-[0.95] tracking-[-0.05em]">
-                {demo.title}<br /><span className="text-dim">{demo.accent}</span>
-              </h2>
-              <p className="mt-6 max-w-lg text-[15px] leading-relaxed text-mute">{demo.text}</p>
-              {/* TODO: conectar a WhatsApp real o a un formulario/servicio de agenda */}
-              <Button href={whatsappLink(demo.message)} target="_blank" rel="noopener noreferrer" mono icon={ArrowUpRight} className="mt-8 h-14">{demo.cta}</Button>
+        {/* Gran tarjeta contenedora con el contorno lila principal */}
+        <div className="relative overflow-hidden rounded-3xl border border-[#b1a0e8] bg-gradient-to-br from-surface via-[#121412] to-[#0d0f0d] p-6 md:p-12 shadow-2xl">
+          
+          {/* Círculo decorativo sutil en la esquina derecha */}
+          <div className="absolute -right-20 -top-20 pointer-events-none opacity-20" aria-hidden="true">
+            <div className="relative flex items-center justify-center">
+              <div className="absolute h-96 w-96 rounded-full border border-line" />
+              <div className="absolute h-64 w-64 rounded-full border border-line" />
             </div>
-            <ul className="border-t border-line lg:mr-16">
-              {demo.checks.map((c) => (
-                <li key={c} className="flex items-center gap-4 border-b border-line py-4 font-mono text-[11px] uppercase tracking-[0.06em] text-cream/80">
-                  <Check size={16} className="text-lilac" aria-hidden="true" />{c}
-                </li>
+          </div>
+
+          <div className="relative z-10 grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-16 items-center">
+            
+            {/* Columna Izquierda: Título y Botón */}
+            <div>
+              <SectionLabel>{demo.label}</SectionLabel>
+              
+              {/* Título principal con "SIN COMPROMISO." en color lila */}
+              <h2 className="mt-6 font-display text-[clamp(2.4rem,4.5vw,4.5rem)] font-bold uppercase tracking-[-0.03em] leading-[0.95] text-cream">
+                PIDE TU DEMO GRATIS. <br />
+                <span className="text-[#b1a0e8]">SIN COMPROMISO.</span>
+              </h2>
+
+              <p className="mt-6 text-mute text-base leading-relaxed max-w-md">
+                {demo.text}
+              </p>
+
+              {/* Botón "Solicitar mi demo" en color lila brillante */}
+              <div className="mt-8">
+                <button
+                  onClick={handleDemoClick}
+                  className="inline-flex items-center gap-3 rounded-full bg-[#b1a0e8] px-7 py-4 font-display text-sm font-bold uppercase tracking-wide text-ink transition-all hover:bg-[#c4b6f5] hover:scale-[1.02] shadow-[0_10px_30px_rgba(177,160,232,0.3)] cursor-pointer"
+                >
+                  <span>{demo.cta}</span>
+                  <ArrowUpRight size={18} />
+                </button>
+              </div>
+            </div>
+
+            {/* Columna Derecha: Lista de verificaciones (Checks) con contorno lila leve */}
+            <div className="flex flex-col gap-4">
+              {demo.checks.map((checkText) => (
+                <div 
+                  key={checkText}
+                  className="flex items-center gap-4 rounded-2xl border border-[#b1a0e8]/30 bg-[#141614]/80 p-5 transition-colors hover:border-[#b1a0e8]/60 shadow-md"
+                >
+                  <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#b1a0e8]/10 text-[#b1a0e8]">
+                    <Check size={16} />
+                  </div>
+                  <span className="font-mono text-xs font-semibold uppercase tracking-wider text-cream">
+                    {checkText}
+                  </span>
+                </div>
               ))}
-            </ul>
+            </div>
+
           </div>
         </div>
       </div>

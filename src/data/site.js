@@ -2,6 +2,7 @@ import ramen from '../assets/ramen.jpeg'
 import gym from '../assets/gym.jpeg'
 import barber from '../assets/barber.jpeg'
 import fogon from '../assets/fogon.jpeg'
+import videounderty from '../assets/videounderty.mp4'
 
 // TODO (pendiente): reemplazar por el número real, con código de país y sin "+" (ej. 51987654321)
 export const WHATSAPP_NUMBER = '51900000000'
@@ -22,15 +23,16 @@ export const hero = {
   primaryCta: 'Iniciar un proyecto',
   secondaryCta: 'Explorar nuestros servicios',
   tag: 'Diseño · Código · Datos',
+  video: videounderty, // <--- Aquí pasamos la variable importada en lugar de la ruta en texto
 }
 
 export const about = {
   title: [
     { t: 'La tecnología no', br: true },
     { t: 'es el ' },
-    { t: 'destino.', m: true, br: true },
+    { t: 'destino.', m: true, br: true }, // <--- 'm: true' aplica el color lila
     { t: 'es el camino', br: true },
-    { t: 'para llegar más lejos.', m: true },
+    { t: 'para llegar más lejos.', m: true }, // <--- 'm: true' aplica el color lila
   ],
   studio: {
     label: 'El estudio',

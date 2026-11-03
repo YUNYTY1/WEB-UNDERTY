@@ -1,64 +1,105 @@
-import { useCallback, useState } from 'react'
-import { ArrowUpRight, Plus } from 'lucide-react'
+import { useState } from 'react'
+import { Plus } from 'lucide-react'
 import SectionLabel from '../components/SectionLabel'
-import SectionTitle from '../components/SectionTitle'
 import SolutionModal from '../components/SolutionModal'
-import { solutions, solutionsIntro } from '../data/site'
+import { solutionsIntro, solutions } from '../data/site'
 
 export default function Solutions() {
-  const [open, setOpen] = useState(null)
-  const close = useCallback(() => setOpen(null), [])
+  const [selectedSolution, setSelectedSolution] = useState(null)
 
   return (
     <section id="servicios" className="section-pad">
       <div className="container-x">
-        {/* Gran tarjeta contenedora general */}
-        <div className="rounded-3xl border border-line bg-surface p-6 md:p-12 shadow-2xl grid gap-12 lg:grid-cols-[0.8fr_1fr] lg:gap-20 items-start">
-
-          {/* Columna Izquierda */}
-          <div>
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-[#b1a0e8]/40 bg-[#b1a0e8]/10 shadow-sm">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#b1a0e8] animate-pulse" />
-              <span className="font-mono text-xs uppercase tracking-widest text-[#b1a0e8] font-semibold">
-                Soluciones
-              </span>
-            </div>            <SectionTitle parts={solutionsIntro.title} className="mt-8" />
-            <p className="mt-8 max-w-xs text-[15px] leading-relaxed text-mute">{solutionsIntro.text}</p>
-            <article className="mt-14 hidden max-w-[360px] rounded-2xl border border-line bg-[#141614] p-6 lg:block">
-              <p className="label-mono text-[10px] text-[#c9d89a]">{solutionsIntro.card.label}</p>
-              <p className="mt-8 font-display text-3xl font-bold uppercase leading-[0.95] tracking-[-0.04em]">{solutionsIntro.card.title}</p>
-              <p className="label-mono mt-6 flex gap-3 text-[10px] text-mute">
-                <span className="text-mint">●</span>
-                {solutionsIntro.card.tags.map((t) => <span key={t}>{t}</span>)}
-              </p>
-            </article>
+        {/* Gran tarjeta contenedora con borde lila */}
+        <div className="relative overflow-hidden rounded-3xl border border-[#b1a0e8] bg-gradient-to-br from-surface via-[#121412] to-[#0d0f0d] p-6 md:p-12 shadow-2xl">
+          
+          {/* Círculos decorativos sutiles en la esquina superior derecha */}
+          <div className="absolute -right-16 -top-16 pointer-events-none opacity-20" aria-hidden="true">
+            <div className="relative flex items-center justify-center">
+              <div className="absolute h-72 w-72 rounded-full border border-line" />
+              <div className="absolute h-52 w-52 rounded-full border border-line" />
+              <div className="absolute h-32 w-32 rounded-full border border-line" />
+            </div>
           </div>
 
-          {/* Columna Derecha: Lista con espaciado vertical correcto */}
-          <ul className="flex flex-col">
-            {solutions.map((s, i) => (
-              <li key={s.title} className="border-b border-line last:border-b-0">
-                <button
-                  type="button"
-                  onClick={() => setOpen(i)}
-                  aria-haspopup="dialog"
-                  aria-label={`Ver detalle de ${s.title}`}
-                  className="group flex w-full items-center gap-4 py-7 text-left sm:gap-6 sm:py-8 transition-colors"
-                >
-                  <span className="font-mono text-[10px] text-dim">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="flex-1 font-body text-lg font-medium uppercase tracking-[-0.01em] text-cream/90 group-hover:text-cream sm:text-xl">{s.title}</span>
-                  <span className="label-mono hidden items-center gap-2 text-[10px] text-dim sm:flex">Ver detalle <ArrowUpRight size={14} aria-hidden="true" /></span>
-                  <span className="grid h-10 w-10 place-items-center rounded-full border border-dim/60 transition-colors group-hover:bg-cream group-hover:text-ink">
-                    <Plus size={18} aria-hidden="true" />
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
+          <div className="relative z-10 grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-16 items-start">
+            
+            {/* Columna Izquierda: Títulos y tarjeta interna */}
+            <div>
+              <SectionLabel>Soluciones</SectionLabel>
+              
+              {/* Título principal con "QUE SÍ MUEVE." en color lila */}
+              <h2 className="mt-8 font-display text-[clamp(2.4rem,4.5vw,4.5rem)] font-bold uppercase tracking-[-0.03em] leading-[0.95] text-cream">
+                LO DIGITAL <br />
+                <span className="text-[#b1a0e8]">QUE SÍ MUEVE.</span>
+              </h2>
 
+              <p className="mt-6 text-mute text-base leading-relaxed max-w-md">
+                {solutionsIntro.text}
+              </p>
+
+              {/* Tarjeta interna inferior */}
+              <div className="mt-10 rounded-2xl border border-line bg-[#141614]/90 p-6 shadow-lg">
+                <span className="font-mono text-[11px] uppercase tracking-widest text-[#b1a0e8] font-semibold">
+                  {solutionsIntro.card.label}
+                </span>
+                <h3 className="font-display text-xl font-bold uppercase tracking-wide text-cream mt-2">
+                  {solutionsIntro.card.title}
+                </h3>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {solutionsIntro.card.tags.map((tag) => (
+                    <span key={tag} className="rounded-full border border-[#b1a0e8]/30 bg-[#b1a0e8]/10 px-3 py-1 font-mono text-xs text-[#b1a0e8]">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Columna Derecha: Lista de soluciones */}
+            <div className="flex flex-col">
+              {solutions.map((item, index) => (
+                <div
+                  key={item.title}
+                  onClick={() => setSelectedSolution(item)}
+                  className="group flex items-center justify-between border-b border-line py-6 transition-colors hover:border-[#b1a0e8]/50 cursor-pointer"
+                >
+                  <div className="flex items-center gap-6">
+                    <span className="font-mono text-xs font-semibold text-[#b1a0e8]">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <div>
+                      <h4 className="font-display text-lg sm:text-xl font-bold uppercase tracking-wide text-cream group-hover:text-[#b1a0e8] transition-colors">
+                        {item.title}
+                      </h4>
+                      <p className="text-xs sm:text-sm text-mute mt-1">
+                        {item.text}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <span className="hidden sm:inline font-mono text-xs tracking-wider text-mute uppercase group-hover:text-cream transition-colors">
+                      Ver detalle ↗
+                    </span>
+                    <button className="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-surface text-cream transition-all group-hover:border-[#b1a0e8] group-hover:bg-[#b1a0e8] group-hover:text-ink">
+                      <Plus size={18} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          </div>
         </div>
       </div>
-      {open !== null && <SolutionModal solution={solutions[open]} index={open} total={solutions.length} onClose={close} />}
+
+      {selectedSolution && (
+        <SolutionModal 
+          solution={selectedSolution} 
+          onClose={() => setSelectedSolution(null)} 
+        />
+      )}
     </section>
   )
 }

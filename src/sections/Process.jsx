@@ -1,12 +1,11 @@
-import SectionTitle from '../components/SectionTitle'
 import { process } from '../data/site'
 
 export default function Process() {
   return (
     <section id="metodologia" className="section-pad">
       <div className="container-x">
-        {/* Gran tarjeta contenedora con diseño de círculos decorativos en la esquina */}
-        <div className="relative overflow-hidden rounded-3xl border border-line bg-gradient-to-br from-surface via-[#121412] to-[#0d0f0d] p-6 md:p-12 shadow-2xl">
+        {/* Gran tarjeta contenedora con el contorno lila */}
+        <div className="relative overflow-hidden rounded-3xl border border-[#b1a0e8] bg-gradient-to-br from-surface via-[#121412] to-[#0d0f0d] p-6 md:p-12 shadow-2xl">
           
           {/* Círculos decorativos sutiles en la esquina superior derecha */}
           <div className="absolute -right-16 -top-16 pointer-events-none opacity-20" aria-hidden="true">
@@ -29,9 +28,12 @@ export default function Process() {
                 </span>
               </div>
 
-              <div className="mt-6">
-                <SectionTitle parts={process.title} />
-              </div>
+              {/* Título directo con "A LA SOLUCIÓN." en lila */}
+              <h2 className="mt-6 font-display text-[clamp(2.4rem,4.5vw,4.5rem)] font-bold uppercase tracking-[-0.03em] leading-[0.95] text-cream">
+                DE LA IDEA <br />
+                <span className="text-[#b1a0e8]">A LA SOLUCIÓN.</span>
+              </h2>
+
               <p className="mt-6 max-w-[17rem] text-[15px] leading-relaxed text-mute">
                 {process.text}
               </p>

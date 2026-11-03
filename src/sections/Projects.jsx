@@ -17,8 +17,8 @@ export default function Projects() {
   return (
     <section id="proyectos" className="section-pad">
       <div className="container-x">
-        {/* Gran tarjeta contenedora con fondo estilizado y círculos decorativos */}
-        <div className="relative overflow-hidden rounded-3xl border border-line bg-gradient-to-br from-surface via-[#121412] to-[#0d0f0d] p-6 md:p-12 shadow-2xl">
+        {/* Gran tarjeta contenedora con el contorno lila y fondo estilizado */}
+        <div className="relative overflow-hidden rounded-3xl border border-[#b1a0e8] bg-gradient-to-br from-surface via-[#121412] to-[#0d0f0d] p-6 md:p-12 shadow-2xl">
           
           {/* Círculos decorativos sutiles en la esquina superior derecha */}
           <div className="absolute -right-16 -top-16 pointer-events-none opacity-20" aria-hidden="true">
@@ -80,7 +80,7 @@ export default function Projects() {
               {projects.map((p) => (
                 <div 
                   key={p.name} 
-                  className="min-w-[320px] sm:min-w-[380px] md:min-w-[420px] snap-start flex-shrink-0 rounded-2xl border border-[#b1a0e8] bg-[#141614] p-5 flex flex-col justify-between shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(177,160,232,0.25)]"
+                  className="min-w-[320px] sm:min-w-[380px] md:min-w-[420px] snap-start flex-shrink-0 rounded-2xl border border-line bg-[#141614] p-5 flex flex-col justify-between shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-[#b1a0e8]/50"
                 >
                   <ProjectCard project={p} />
                 </div>
