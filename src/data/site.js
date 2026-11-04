@@ -3,6 +3,9 @@ import gym from '../assets/gym.jpeg'
 import barber from '../assets/barber.jpeg'
 import fogon from '../assets/fogon.jpeg'
 import videounderty from '../assets/videounderty.mp4'
+import crm1 from '../assets/crm1.jpeg'
+import crm2 from '../assets/crm2.jpeg'
+import crm3 from '../assets/crm3.jpeg'
 
 // TODO (pendiente): reemplazar por el número real, con código de país y sin "+" (ej. 51987654321)
 export const WHATSAPP_NUMBER = '51900000000'
@@ -49,12 +52,67 @@ export const solutionsIntro = {
 }
 
 export const solutions = [
-  { title: 'CRM', contactOption: 'crm', text: 'Centraliza clientes, oportunidades y equipos comerciales en un solo lugar.' },
-  { title: 'E-commerce', contactOption: 'tienda', text: 'Vende por internet con una tienda clara, rápida y lista para crecer.' },
-  { title: 'Apps móviles', contactOption: 'app', text: 'Conecta con tus usuarios desde una app pensada para su día a día.' },
-  { title: 'Sistemas a medida', contactOption: 'datos', text: 'Software hecho a la medida de tus procesos, sin adaptarte a plantillas.' },
-  { title: 'Soluciones digitales', contactOption: 'datos', text: 'Herramientas digitales que simplifican la operación de tu negocio.' },
-  { title: 'Datos y analítica', contactOption: 'datos', text: 'Convierte tus datos en decisiones con paneles claros y medibles.' },
+  {
+    title: "CRM",
+    text: "Centraliza clientes, oportunidades y equipos comerciales en un solo lugar.",
+    // Aquí defines las 3 imágenes para este punto específico:
+    images: [
+      crm1,
+      crm2,
+      crm3
+    ],
+    contactOption: "crm"
+  },
+  {
+    title: "E-COMMERCE",
+    text: "Vende por internet con una tienda clara, rápida y lista para crecer.",
+    images: [
+      "/src/assets/ecommerce-1.png",
+      "/src/assets/ecommerce-2.png",
+      "/src/assets/ecommerce-3.png"
+    ],
+    contactOption: "ecommerce"
+  },
+  {
+    title: "APPS MÓVILES",
+    text: "Conecta con tus usuarios desde una app pensada para su día a día.",
+    images: [
+      "/src/assets/app-1.png",
+      "/src/assets/app-2.png",
+      "/src/assets/app-3.png"
+    ],
+    contactOption: "app"
+  },
+  {
+    title: "SISTEMAS A MEDIDA",
+    text: "Software hecho a la medida de tus procesos, sin adaptarte a plantillas.",
+    images: [
+      "/src/assets/sistema-1.png",
+      "/src/assets/sistema-2.png",
+      "/src/assets/sistema-3.png"
+    ],
+    contactOption: "system"
+  },
+  {
+    title: "SOLUCIONES DIGITALES",
+    text: "Herramientas digitales que simplifican la operación de tu negocio.",
+    images: [
+      "/src/assets/soluciones-1.png",
+      "/src/assets/soluciones-2.png",
+      "/src/assets/soluciones-3.png"
+    ],
+    contactOption: "digital"
+  },
+  {
+    title: "DATOS Y ANALÍTICA",
+    text: "Convierte tus datos en decisiones con paneles claros y medibles.",
+    images: [
+      "/src/assets/datos-1.png",
+      "/src/assets/datos-2.png",
+      "/src/assets/datos-3.png"
+    ],
+    contactOption: "data"
+  }
 ]
 
 export const solutionPoints = [

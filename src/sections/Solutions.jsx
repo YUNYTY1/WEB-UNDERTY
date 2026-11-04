@@ -97,6 +97,8 @@ export default function Solutions() {
       {selectedSolution && (
         <SolutionModal 
           solution={selectedSolution} 
+          index={solutions.findIndex(s => s.title === selectedSolution.title)}
+          total={solutions.length}
           onClose={() => setSelectedSolution(null)} 
         />
       )}
