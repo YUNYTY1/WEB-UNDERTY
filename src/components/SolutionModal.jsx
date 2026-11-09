@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowUpRight, ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { ArrowUpRight, ChevronLeft, ChevronRight, X, RotateCcw, ZoomIn } from 'lucide-react'
 import Button from './Button'
 import { solutionPoints } from '../data/site'
 
@@ -7,21 +7,36 @@ export default function SolutionModal({ solution, index, total, onClose }) {
   const closeRef = useRef(null)
   const num = (n) => String(n).padStart(2, '0')
 
-  // Obtenemos el array de 3 imágenes de la solución (o respaldamos si solo hubiera una)
   const images = solution.images && solution.images.length > 0
     ? solution.images
     : [solution.image, solution.image, solution.image]
 
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  // Autoplay cada 3.5 segundos
+  // Estados para el zoom general y movimiento (panning)
+  const [scale, setScale] = useState(1)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
+
+  // Estado para abrir la imagen seleccionada en un visor grande (Lightbox modal)
+  const [lightboxImg, setLightboxImg] = useState(null)
+
+  // Autoplay cada 3.5 segundos (se pausa si el usuario hace zoom)
   useEffect(() => {
+    if (scale > 1 || lightboxImg) return 
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length)
     }, 3500)
 
     return () => clearInterval(timer)
-  }, [images.length])
+  }, [images.length, scale, lightboxImg])
+
+  // Resetear zoom al cambiar de imagen
+  useEffect(() => {
+    setScale(1)
+    setPosition({ x: 0, y: 0 })
+  }, [currentIndex])
 
   const handleNext = (e) => {
     e.stopPropagation()
@@ -33,22 +48,68 @@ export default function SolutionModal({ solution, index, total, onClose }) {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length)
   }
 
+  // Manejo del zoom con la rueda del ratón
+  const handleWheel = (e) => {
+    e.preventDefault()
+    setScale((prevScale) => {
+      const newScale = prevScale - e.deltaY * 0.001
+      if (newScale < 1) {
+        setPosition({ x: 0, y: 0 })
+        return 1
+      }
+      return Math.min(newScale, 4)
+    })
+  }
+
+  const handleMouseDown = (e) => {
+    if (scale > 1) {
+      setIsDragging(true)
+      setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y })
+    }
+  }
+
+  const handleMouseMove = (e) => {
+    if (isDragging && scale > 1) {
+      setPosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y
+      })
+    }
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  const resetZoom = (e) => {
+    e.stopPropagation()
+    setScale(1)
+    setPosition({ x: 0, y: 0 })
+  }
+
   useEffect(() => {
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     closeRef.current?.focus()
-    const onKey = (e) => e.key === 'Escape' && onClose()
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        if (lightboxImg) {
+          setLightboxImg(null)
+        } else {
+          onClose()
+        }
+      }
+    }
     window.addEventListener('keydown', onKey)
     return () => {
       document.body.style.overflow = prev
       window.removeEventListener('keydown', onKey)
     }
-  }, [onClose])
+  }, [onClose, lightboxImg])
 
   const goContact = (e) => {
     e.preventDefault()
     onClose()
-    // Preselecciona la opción relacionada en la sección Contacto
     window.dispatchEvent(new CustomEvent('underty:select-contact', { detail: solution.contactOption }))
     setTimeout(() => document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' }), 60)
   }
@@ -62,28 +123,56 @@ export default function SolutionModal({ solution, index, total, onClose }) {
         onClick={(e) => e.stopPropagation()}
         className="relative grid max-h-[92vh] w-full max-w-[950px] animate-pop overflow-y-auto rounded-3xl border border-[#b1a0e8] bg-surface md:grid-cols-2 shadow-2xl"
       >
-   {/* Columna Izquierda: Carrusel de 3 imágenes completas sin recortes */}
-        <div className="relative h-72 md:h-full md:min-h-[555px] w-full overflow-hidden bg-[#0a0c0a] flex items-center justify-center p-4 md:p-6 group">
-          
-          {/* Fondo difuminado sutil basado en la misma imagen para rellenar los espacios con elegancia */}
+        {/* Columna Izquierda: Carrusel con Zoom */}
+        <div 
+          className="relative h-72 md:h-full md:min-h-[555px] w-full overflow-hidden bg-[#0a0c0a] flex items-center justify-center p-4 md:p-6 group cursor-grab active:cursor-grabbing select-none"
+          onWheel={handleWheel}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+        >
+          {/* Fondo difuminado sutil */}
           <div className="absolute inset-0 opacity-20 filter blur-xl scale-110 pointer-events-none">
-            <img 
-              src={images[currentIndex]} 
-              alt="" 
-              className="w-full h-full object-cover" 
-            />
+            <img src={images[currentIndex]} alt="" className="w-full h-full object-cover" />
           </div>
 
-          {/* Imagen principal completa (sin recortes) */}
-          <img 
-            src={images[currentIndex]} 
-            alt={`Ilustración de la solución ${solution.title} - ${currentIndex + 1}`} 
-            className="relative z-10 max-h-full max-w-full object-contain rounded-xl shadow-2xl transition-all duration-500" 
-          />
+          {/* Imagen interactiva (al hacer clic se abre en grande en el Lightbox) */}
+          <div 
+            onClick={() => setLightboxImg(images[currentIndex])}
+            className="relative z-10 max-h-full max-w-full flex items-center justify-center cursor-zoom-in"
+            title="Haz clic para ver la imagen más grande"
+          >
+            <img 
+              src={images[currentIndex]} 
+              alt={`Ilustración de la solución ${solution.title} ${currentIndex + 1}`} 
+              style={{
+                transform: `scale(${scale}) translate(${position.x / scale}px, ${position.y / scale}px)`,
+                transition: isDragging ? 'none' : 'transform 0.1s ease-out'
+              }}
+              className="max-h-full max-w-full object-contain rounded-xl shadow-2xl pointer-events-none" 
+            />
+            {/* Pequeño indicador visual flotante de lupa al pasar el mouse */}
+            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center text-white font-mono text-xs gap-1.5 backdrop-blur-[2px]">
+              <ZoomIn size={18} /> Click para ampliar
+            </div>
+          </div>
+
+          {/* Botón flotante para restablecer el zoom interno */}
+          {scale > 1 && (
+            <button
+              type="button"
+              onClick={resetZoom}
+              className="absolute top-5 left-6 z-30 flex items-center gap-1.5 bg-black/80 hover:bg-[#b1a0e8] hover:text-ink text-cream text-xs font-mono px-3 py-1.5 rounded-full border border-white/20 transition-colors backdrop-blur-md cursor-pointer"
+            >
+              <RotateCcw size={14} />
+              <span>Restablecer zoom</span>
+            </button>
+          )}
 
           <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" aria-hidden="true" />
           
-          {/* Indicador de qué punto de la lista estás viendo (ej. 01 / 06) */}
+          {/* Indicador de qué punto estás viendo */}
           <p className="absolute bottom-5 left-6 font-mono text-xs font-bold text-cream z-20 bg-black/70 px-2.5 py-1 rounded-md border border-white/10 backdrop-blur-md">
             {num(index + 1)} / {num(total)}
           </p>
@@ -106,7 +195,7 @@ export default function SolutionModal({ solution, index, total, onClose }) {
             <ChevronRight size={18} />
           </button>
 
-          {/* Indicadores de puntos inferiores (para las 3 imágenes del carrusel) */}
+          {/* Indicadores de puntos inferiores */}
           <div className="absolute bottom-5 right-6 flex gap-1.5 z-20 bg-black/70 px-3 py-1.5 rounded-full border border-white/10 backdrop-blur-md">
             {images.map((_, idx) => (
               <button
@@ -151,6 +240,32 @@ export default function SolutionModal({ solution, index, total, onClose }) {
           </Button>
         </div>
       </div>
+
+      {/* --- LIGHTBOX (VISOR DE IMAGEN AMPLIADA CON BOTÓN X MORADO) --- */}
+      {lightboxImg && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-md animate-in fade-in duration-200"
+          onClick={() => setLightboxImg(null)}
+        >
+          {/* Botón flotante "X" en color morado */}
+          <button
+            type="button"
+            onClick={() => setLightboxImg(null)}
+            aria-label="Cerrar zoom"
+            className="absolute right-6 top-6 z-[110] flex h-12 w-12 items-center justify-center rounded-full bg-[#b1a0e8] text-ink shadow-2xl hover:scale-110 transition-transform cursor-pointer font-bold"
+          >
+            <X size={22} />
+          </button>
+
+          {/* Imagen en grande adaptada a la pantalla */}
+          <img
+            src={lightboxImg}
+            alt="Vista detallada ampliada"
+            className="max-h-[90vh] max-w-[90vw] object-contain rounded-2xl shadow-2xl border border-[#b1a0e8]/40"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   )
 }

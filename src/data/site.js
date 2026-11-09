@@ -6,6 +6,21 @@ import videounderty from '../assets/videounderty.mp4'
 import crm1 from '../assets/crm1.jpeg'
 import crm2 from '../assets/crm2.jpeg'
 import crm3 from '../assets/crm3.jpeg'
+import comercio1 from '../assets/comercio1.jpeg'
+import comercio2 from '../assets/comercio2.jpeg'
+import comercio3 from '../assets/comercio3.jpeg'
+import movil1 from '../assets/movil1.jpeg'
+import movil2 from '../assets/movil2.jpeg'
+import movil3 from '../assets/movil3.jpeg'
+import sistema1 from '../assets/sistema-1.jpeg'
+import sistema2 from '../assets/sistema-2.jpeg'
+import sistema3 from '../assets/sistema-3.jpeg'
+import solucion1 from '../assets/solucion1.jpeg'
+import solucion2 from '../assets/solucion2.jpeg'
+import solucion3 from '../assets/solucion3.jpeg'
+import datos1 from '../assets/datos1.jpg'
+import datos2 from '../assets/datos2.jpg'
+import datos3 from '../assets/datos3.jpg'
 
 // TODO (pendiente): reemplazar por el número real, con código de país y sin "+" (ej. 51987654321)
 export const WHATSAPP_NUMBER = '51900000000'
@@ -67,9 +82,10 @@ export const solutions = [
     title: "E-COMMERCE",
     text: "Vende por internet con una tienda clara, rápida y lista para crecer.",
     images: [
-      "/src/assets/ecommerce-1.png",
-      "/src/assets/ecommerce-2.png",
-      "/src/assets/ecommerce-3.png"
+      comercio1,
+      comercio2,
+      comercio3
+      
     ],
     contactOption: "ecommerce"
   },
@@ -77,9 +93,10 @@ export const solutions = [
     title: "APPS MÓVILES",
     text: "Conecta con tus usuarios desde una app pensada para su día a día.",
     images: [
-      "/src/assets/app-1.png",
-      "/src/assets/app-2.png",
-      "/src/assets/app-3.png"
+      movil1,
+      movil2,
+      movil3
+    
     ],
     contactOption: "app"
   },
@@ -87,9 +104,9 @@ export const solutions = [
     title: "SISTEMAS A MEDIDA",
     text: "Software hecho a la medida de tus procesos, sin adaptarte a plantillas.",
     images: [
-      "/src/assets/sistema-1.png",
-      "/src/assets/sistema-2.png",
-      "/src/assets/sistema-3.png"
+      sistema1,
+      sistema2,
+      sistema3
     ],
     contactOption: "system"
   },
@@ -97,9 +114,9 @@ export const solutions = [
     title: "SOLUCIONES DIGITALES",
     text: "Herramientas digitales que simplifican la operación de tu negocio.",
     images: [
-      "/src/assets/soluciones-1.png",
-      "/src/assets/soluciones-2.png",
-      "/src/assets/soluciones-3.png"
+      solucion1,
+      solucion2,
+      solucion3
     ],
     contactOption: "digital"
   },
@@ -107,9 +124,10 @@ export const solutions = [
     title: "DATOS Y ANALÍTICA",
     text: "Convierte tus datos en decisiones con paneles claros y medibles.",
     images: [
-      "/src/assets/datos-1.png",
-      "/src/assets/datos-2.png",
-      "/src/assets/datos-3.png"
+      datos1,
+      datos2,
+      datos3
+     
     ],
     contactOption: "data"
   }
@@ -179,8 +197,8 @@ export const footer = {
   right: 'Soluciones digitales para empresas que avanzan',
   description: 'Estudio de tecnología y experiencias digitales. Diseño, estrategia y desarrollo para convertir ideas en movimiento.',
   social: [
-    { name: 'LinkedIn', href: 'https://www.linkedin.com/' },
-    { name: 'Instagram', href: 'https://www.instagram.com/' },
+    { name: 'LinkedIn', href: 'https://www.linkedin.com/in/matias-huamani/' },
+    
   ],
   copyright: '© 2025 Grupo Underty',
   rights: 'Todos los derechos reservados.',
