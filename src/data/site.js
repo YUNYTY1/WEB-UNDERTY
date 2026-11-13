@@ -22,10 +22,10 @@ import datos1 from '../assets/datos1.jpg'
 import datos2 from '../assets/datos2.jpg'
 import datos3 from '../assets/datos3.jpg'
 
-// TODO (pendiente): reemplazar por el número real, con código de país y sin "+" (ej. 51987654321)
-export const WHATSAPP_NUMBER = '51900000000'
+// Número único de WhatsApp (código de país, sin "+"). Se usa en Contacto, Demo y el botón flotante.
+export const WHATSAPP_NUMBER = '51989715909'
 
-export const brand = { name: 'Grupo Underty', email: 'hola@grupounderty.com' }
+export const brand = { name: 'Grupo Underty', email: 'grupounderty@gmail.com' }
 
 export const navLinks = [
   { id: 'inicio', label: 'Inicio' },
@@ -66,6 +66,7 @@ export const solutionsIntro = {
   card: { label: 'Una mirada completa', title: 'De la idea al impacto.', tags: ['Diseño', 'Código', 'Datos'] },
 }
 
+// contactOption debe coincidir con un id de contact.options (crm, tienda, app, datos)
 export const solutions = [
   {
     title: "CRM",
@@ -85,9 +86,8 @@ export const solutions = [
       comercio1,
       comercio2,
       comercio3
-      
     ],
-    contactOption: "ecommerce"
+    contactOption: "tienda"
   },
   {
     title: "APPS MÓVILES",
@@ -96,7 +96,6 @@ export const solutions = [
       movil1,
       movil2,
       movil3
-    
     ],
     contactOption: "app"
   },
@@ -108,7 +107,7 @@ export const solutions = [
       sistema2,
       sistema3
     ],
-    contactOption: "system"
+    contactOption: "datos"
   },
   {
     title: "SOLUCIONES DIGITALES",
@@ -118,7 +117,7 @@ export const solutions = [
       solucion2,
       solucion3
     ],
-    contactOption: "digital"
+    contactOption: "datos"
   },
   {
     title: "DATOS Y ANALÍTICA",
@@ -127,9 +126,8 @@ export const solutions = [
       datos1,
       datos2,
       datos3
-     
     ],
-    contactOption: "data"
+    contactOption: "datos"
   }
 ]
 
@@ -198,8 +196,7 @@ export const footer = {
   description: 'Estudio de tecnología y experiencias digitales. Diseño, estrategia y desarrollo para convertir ideas en movimiento.',
   social: [
     { name: 'LinkedIn', href: 'https://www.linkedin.com/in/matias-huamani/' },
-    
   ],
-  copyright: '© 2025 Grupo Underty',
+  copyright: '© 2026 Grupo Underty',
   rights: 'Todos los derechos reservados.',
 }

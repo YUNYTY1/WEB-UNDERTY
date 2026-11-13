@@ -61,7 +61,16 @@ export default function Solutions() {
               {solutions.map((item, index) => (
                 <div
                   key={item.title}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Ver detalle de ${item.title}`}
                   onClick={() => setSelectedSolution(item)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      setSelectedSolution(item)
+                    }
+                  }}
                   className="group flex items-center justify-between border-b border-line py-6 transition-colors hover:border-[#b1a0e8]/50 cursor-pointer"
                 >
                   <div className="flex items-center gap-6">
@@ -82,9 +91,9 @@ export default function Solutions() {
                     <span className="hidden sm:inline font-mono text-xs tracking-wider text-mute uppercase group-hover:text-cream transition-colors">
                       Ver detalle ↗
                     </span>
-                    <button className="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-surface text-cream transition-all group-hover:border-[#b1a0e8] group-hover:bg-[#b1a0e8] group-hover:text-ink">
+                    <span aria-hidden="true" className="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-surface text-cream transition-all group-hover:border-[#b1a0e8] group-hover:bg-[#b1a0e8] group-hover:text-ink">
                       <Plus size={18} />
-                    </button>
+                    </span>
                   </div>
                 </div>
               ))}

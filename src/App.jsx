@@ -21,7 +21,6 @@ export default function App() {
       <NavBar />
       <main>
         <Hero />
-        <VideoMarquee />
         <About />
         <VideoMarquee />
         <Solutions />

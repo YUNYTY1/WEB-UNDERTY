@@ -1,11 +1,11 @@
 export default function Logo({ footer = false }) {
   return (
     <a href="#inicio" aria-label="Grupo Underty, ir al inicio" className="flex items-center gap-3.5">
-      {/* Subimos la altura a h-16 para que se vea mucho más grande */}
+      {/* h-14 en móvil para caber en el header de 72px; h-20 desde escritorio */}
       <img 
         src="/LOGO.png" 
         alt="Grupo Underty Logo" 
-        className="h-20 w-auto rounded-xl object-contain shadow-md" 
+        className="h-14 w-auto rounded-xl object-contain shadow-md lg:h-20" 
       />
       
       <span className="leading-none">

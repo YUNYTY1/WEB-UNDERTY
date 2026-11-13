@@ -1,10 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ArrowUpRight, MessageCircle } from 'lucide-react'
 import SectionLabel from '../components/SectionLabel'
 import { WHATSAPP_NUMBER, contact } from '../data/site'
 
 export default function Contact() {
   const [selectedOption, setSelectedOption] = useState(contact.options[0])
+
+  // Escucha la solución elegida en el modal de Servicios y preselecciona la opción
+  useEffect(() => {
+    const onSelect = (e) => {
+      const opt = contact.options.find((o) => o.id === e.detail)
+      if (opt) setSelectedOption(opt)
+    }
+    window.addEventListener('underty:select-contact', onSelect)
+    return () => window.removeEventListener('underty:select-contact', onSelect)
+  }, [])
 
   const handleWhatsAppClick = () => {
     const text = encodeURIComponent(selectedOption.message)

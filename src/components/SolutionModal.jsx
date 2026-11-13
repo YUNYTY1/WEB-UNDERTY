@@ -3,8 +3,13 @@ import { ArrowUpRight, ChevronLeft, ChevronRight, X, RotateCcw, ZoomIn } from 'l
 import Button from './Button'
 import { solutionPoints } from '../data/site'
 
+const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+
 export default function SolutionModal({ solution, index, total, onClose }) {
   const closeRef = useRef(null)
+  const dialogRef = useRef(null)
+  const zoomAreaRef = useRef(null)
+  const lightboxCloseRef = useRef(null)
   const num = (n) => String(n).padStart(2, '0')
 
   const images = solution.images && solution.images.length > 0
@@ -48,18 +53,22 @@ export default function SolutionModal({ solution, index, total, onClose }) {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length)
   }
 
-  // Manejo del zoom con la rueda del ratón
-  const handleWheel = (e) => {
-    e.preventDefault()
-    setScale((prevScale) => {
-      const newScale = prevScale - e.deltaY * 0.001
-      if (newScale < 1) {
-        setPosition({ x: 0, y: 0 })
-        return 1
-      }
-      return Math.min(newScale, 4)
-    })
-  }
+  // Zoom con la rueda: listener no pasivo para poder bloquear el scroll de la página
+  useEffect(() => {
+    const el = zoomAreaRef.current
+    if (!el) return
+    const onWheel = (e) => {
+      e.preventDefault()
+      setScale((prev) => Math.min(4, Math.max(1, prev - e.deltaY * 0.001)))
+    }
+    el.addEventListener('wheel', onWheel, { passive: false })
+    return () => el.removeEventListener('wheel', onWheel)
+  }, [])
+
+  // Al volver a escala 1 se recentra la imagen
+  useEffect(() => {
+    if (scale <= 1) setPosition({ x: 0, y: 0 })
+  }, [scale])
 
   const handleMouseDown = (e) => {
     if (scale > 1) {
@@ -87,24 +96,52 @@ export default function SolutionModal({ solution, index, total, onClose }) {
     setPosition({ x: 0, y: 0 })
   }
 
+  // Bloquea el scroll del fondo mientras el modal está abierto
   useEffect(() => {
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    closeRef.current?.focus()
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [])
+
+  // Foco: botón cerrar del modal, o botón cerrar del visor ampliado
+  useEffect(() => {
+    if (lightboxImg) lightboxCloseRef.current?.focus()
+    else closeRef.current?.focus()
+  }, [lightboxImg])
+
+  // Teclado: Esc cierra y Tab queda atrapado dentro del modal
+  useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'Escape') {
-        if (lightboxImg) {
-          setLightboxImg(null)
-        } else {
-          onClose()
-        }
+        if (lightboxImg) setLightboxImg(null)
+        else onClose()
+        return
+      }
+      if (e.key !== 'Tab') return
+      if (lightboxImg) {
+        e.preventDefault()
+        lightboxCloseRef.current?.focus()
+        return
+      }
+      const nodes = dialogRef.current?.querySelectorAll(FOCUSABLE)
+      if (!nodes || nodes.length === 0) return
+      const first = nodes[0]
+      const last = nodes[nodes.length - 1]
+      if (!dialogRef.current.contains(document.activeElement)) {
+        e.preventDefault()
+        first.focus()
+      } else if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
       }
     }
     window.addEventListener('keydown', onKey)
-    return () => {
-      document.body.style.overflow = prev
-      window.removeEventListener('keydown', onKey)
-    }
+    return () => window.removeEventListener('keydown', onKey)
   }, [onClose, lightboxImg])
 
   const goContact = (e) => {
@@ -117,6 +154,7 @@ export default function SolutionModal({ solution, index, total, onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-3 backdrop-blur-sm sm:p-6" onClick={onClose}>
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="solucion-titulo"
@@ -125,8 +163,8 @@ export default function SolutionModal({ solution, index, total, onClose }) {
       >
         {/* Columna Izquierda: Carrusel con Zoom */}
         <div 
+          ref={zoomAreaRef}
           className="relative h-72 md:h-full md:min-h-[555px] w-full overflow-hidden bg-[#0a0c0a] flex items-center justify-center p-4 md:p-6 group cursor-grab active:cursor-grabbing select-none"
-          onWheel={handleWheel}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
@@ -139,7 +177,16 @@ export default function SolutionModal({ solution, index, total, onClose }) {
 
           {/* Imagen interactiva (al hacer clic se abre en grande en el Lightbox) */}
           <div 
+            role="button"
+            tabIndex={0}
+            aria-label="Ampliar imagen"
             onClick={() => setLightboxImg(images[currentIndex])}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                setLightboxImg(images[currentIndex])
+              }
+            }}
             className="relative z-10 max-h-full max-w-full flex items-center justify-center cursor-zoom-in"
             title="Haz clic para ver la imagen más grande"
           >
@@ -182,7 +229,7 @@ export default function SolutionModal({ solution, index, total, onClose }) {
             type="button"
             onClick={handlePrev}
             aria-label="Imagen anterior"
-            className="absolute left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-black/70 text-cream border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity hover:border-[#b1a0e8] hover:bg-[#b1a0e8] hover:text-ink cursor-pointer z-20 backdrop-blur-md"
+            className="absolute left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-black/70 text-cream border border-white/10 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity hover:border-[#b1a0e8] hover:bg-[#b1a0e8] hover:text-ink cursor-pointer z-20 backdrop-blur-md"
           >
             <ChevronLeft size={18} />
           </button>
@@ -190,7 +237,7 @@ export default function SolutionModal({ solution, index, total, onClose }) {
             type="button"
             onClick={handleNext}
             aria-label="Siguiente imagen"
-            className="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-black/70 text-cream border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity hover:border-[#b1a0e8] hover:bg-[#b1a0e8] hover:text-ink cursor-pointer z-20 backdrop-blur-md"
+            className="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-black/70 text-cream border border-white/10 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity hover:border-[#b1a0e8] hover:bg-[#b1a0e8] hover:text-ink cursor-pointer z-20 backdrop-blur-md"
           >
             <ChevronRight size={18} />
           </button>
@@ -249,6 +296,7 @@ export default function SolutionModal({ solution, index, total, onClose }) {
         >
           {/* Botón flotante "X" en color morado */}
           <button
+            ref={lightboxCloseRef}
             type="button"
             onClick={() => setLightboxImg(null)}
             aria-label="Cerrar zoom"
